@@ -10,8 +10,8 @@ import secrets
 class Settings(BaseSettings):
     """تنظیمات اصلی پروژه"""
 
-    # Database
-    DATABASE_URL: str = "postgresql://admin:password@localhost:5432/reseller_panel"
+    # Database (MySQL)
+    DATABASE_URL: str = "mysql+pymysql://admin:password@localhost:3306/reseller_panel?charset=utf8mb4"
 
     # Security
     SECRET_KEY: str = secrets.token_urlsafe(32)
@@ -41,6 +41,13 @@ class Settings(BaseSettings):
     # Background Jobs
     ENABLE_SCHEDULER: bool = True
     SYNC_ACCOUNTS_INTERVAL_HOURS: int = 1
+
+    # Redis
+    REDIS_URL: str = "redis://localhost:6379/0"
+
+    # Celery
+    CELERY_BROKER_URL: str = "redis://localhost:6379/1"
+    CELERY_RESULT_BACKEND: str = "redis://localhost:6379/2"
 
     class Config:
         env_file = ".env"

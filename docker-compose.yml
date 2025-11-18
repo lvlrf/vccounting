@@ -2,19 +2,40 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:15
+    image: mysql:8.0
     container_name: reseller_panel_db
     environment:
-      POSTGRES_DB: reseller_panel
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password
+      MYSQL_DATABASE: reseller_panel
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: rootpassword
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
     ports:
-      - "5432:5432"
+      - "3306:3306"
     networks:
       - reseller_network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: reseller_panel_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - reseller_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
 
   backend:
     build: ./backend
@@ -25,6 +46,39 @@ services:
     ports:
       - "8000:8000"
     depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - ./backend/.env
+    networks:
+      - reseller_network
+    restart: unless-stopped
+
+  celery_worker:
+    build: ./backend
+    container_name: reseller_panel_celery
+    command: celery -A app.celery_worker worker --loglevel=info
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - redis
+      - db
+    env_file:
+      - ./backend/.env
+    networks:
+      - reseller_network
+    restart: unless-stopped
+
+  celery_beat:
+    build: ./backend
+    container_name: reseller_panel_celery_beat
+    command: celery -A app.celery_worker beat --loglevel=info
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - redis
       - db
     env_file:
       - ./backend/.env
@@ -47,7 +101,7 @@ services:
     restart: unless-stopped
 
 volumes:
-  postgres_data:
+  mysql_data:
     driver: local
 
 networks:
