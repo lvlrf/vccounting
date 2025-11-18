@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کریدیت و تراکنش‌ها</title>
+
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="logo">
+                <h5>پنل نماینده</h5>
+            </div>
+
+            <div class="user-info">
+                <p><strong id="userFullName">نام نماینده</strong></p>
+                <p id="userUsername">username</p>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="/pages/reseller/dashboard.html" class="nav-item">
+                    <i class="material-icons">dashboard</i>
+                    داشبورد
+                </a>
+                <a href="/pages/reseller/accounts.html" class="nav-item">
+                    <i class="material-icons">account_box</i>
+                    مدیریت اکانت‌ها
+                </a>
+                <a href="/pages/reseller/credit.html" class="nav-item active">
+                    <i class="material-icons">account_balance_wallet</i>
+                    کریدیت و تراکنش‌ها
+                </a>
+                <a href="/pages/reseller/profile.html" class="nav-item">
+                    <i class="material-icons">person</i>
+                    پروفایل
+                </a>
+                <a href="#" class="nav-item" onclick="logout()">
+                    <i class="material-icons">exit_to_app</i>
+                    خروج
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Topbar -->
+            <div class="topbar">
+                <div>
+                    <span class="menu-toggle" onclick="toggleSidebar()">
+                        <i class="material-icons">menu</i>
+                    </span>
+                    <h5 style="display: inline-block; margin-right: 10px;">کریدیت و تراکنش‌ها</h5>
+                </div>
+                <div>
+                    <span class="credit-badge">
+                        <i class="material-icons tiny">account_balance_wallet</i>
+                        موجودی: <span id="creditBalance">0</span> کریدیت
+                    </span>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Credit Summary -->
+                <div class="row">
+                    <div class="col s12 m4">
+                        <div class="stat-card teal">
+                            <div class="stat-label">موجودی فعلی</div>
+                            <div class="stat-value" id="currentBalance">0</div>
+                            <i class="material-icons">account_balance_wallet</i>
+                        </div>
+                    </div>
+                    <div class="col s12 m4">
+                        <div class="stat-card green">
+                            <div class="stat-label">کل کریدیت دریافتی</div>
+                            <div class="stat-value" id="totalReceived">0</div>
+                            <i class="material-icons">arrow_downward</i>
+                        </div>
+                    </div>
+                    <div class="col s12 m4">
+                        <div class="stat-card orange">
+                            <div class="stat-label">کل کریدیت خرج شده</div>
+                            <div class="stat-value" id="totalSpent">0</div>
+                            <i class="material-icons">arrow_upward</i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card custom-card">
+                            <div class="card-content">
+                                <div class="row" style="margin-bottom: 0;">
+                                    <div class="col s12 m4">
+                                        <select id="operationFilter" class="browser-default">
+                                            <option value="">همه عملیات‌ها</option>
+                                            <option value="create_account">ایجاد اکانت</option>
+                                            <option value="renew">تمدید</option>
+                                            <option value="add_traffic">افزودن حجم</option>
+                                            <option value="delete">حذف اکانت</option>
+                                            <option value="manual">تراکنش دستی</option>
+                                        </select>
+                                    </div>
+                                    <div class="col s12 m4">
+                                        <select id="typeFilter" class="browser-default">
+                                            <option value="">همه تراکنش‌ها</option>
+                                            <option value="positive">افزایش کریدیت</option>
+                                            <option value="negative">کاهش کریدیت</option>
+                                        </select>
+                                    </div>
+                                    <div class="col s12 m4">
+                                        <input type="text" id="searchInput" placeholder="جستجو در توضیحات...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transactions Table -->
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card custom-card data-table">
+                            <div class="card-content">
+                                <span class="card-title">
+                                    <i class="material-icons left">receipt</i>
+                                    تاریخچه تراکنش‌ها
+                                </span>
+                                <table class="striped responsive-table">
+                                    <thead>
+                                        <tr>
+                                            <th>تاریخ و ساعت</th>
+                                            <th>عملیات</th>
+                                            <th>مقدار</th>
+                                            <th>موجودی جدید</th>
+                                            <th>توضیحات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="transactionsTableBody">
+                                        <tr>
+                                            <td colspan="5" class="center-align">
+                                                <div class="preloader-wrapper small active">
+                                                    <div class="spinner-layer spinner-teal-only">
+                                                        <div class="circle-clipper left">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                        <div class="gap-patch">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                        <div class="circle-clipper right">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-white-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- API Client -->
+    <script src="/js/api.js"></script>
+    <!-- Credit Script -->
+    <script src="/js/credit.js"></script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدیریت اکانت‌ها</title>
+
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="logo">
+                <h5>پنل نماینده</h5>
+            </div>
+
+            <div class="user-info">
+                <p><strong id="userFullName">نام نماینده</strong></p>
+                <p id="userUsername">username</p>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="/pages/reseller/dashboard.html" class="nav-item">
+                    <i class="material-icons">dashboard</i>
+                    داشبورد
+                </a>
+                <a href="/pages/reseller/accounts.html" class="nav-item active">
+                    <i class="material-icons">account_box</i>
+                    مدیریت اکانت‌ها
+                </a>
+                <a href="/pages/reseller/credit.html" class="nav-item">
+                    <i class="material-icons">account_balance_wallet</i>
+                    کریدیت و تراکنش‌ها
+                </a>
+                <a href="/pages/reseller/profile.html" class="nav-item">
+                    <i class="material-icons">person</i>
+                    پروفایل
+                </a>
+                <a href="#" class="nav-item" onclick="logout()">
+                    <i class="material-icons">exit_to_app</i>
+                    خروج
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Topbar -->
+            <div class="topbar">
+                <div>
+                    <span class="menu-toggle" onclick="toggleSidebar()">
+                        <i class="material-icons">menu</i>
+                    </span>
+                    <h5 style="display: inline-block; margin-right: 10px;">مدیریت اکانت‌ها</h5>
+                </div>
+                <div>
+                    <span class="credit-badge">
+                        <i class="material-icons tiny">account_balance_wallet</i>
+                        موجودی: <span id="creditBalance">0</span> کریدیت
+                    </span>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Filters and Actions -->
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card custom-card">
+                            <div class="card-content">
+                                <div class="row" style="margin-bottom: 0;">
+                                    <div class="col s12 m3">
+                                        <button class="btn waves-effect waves-light teal" style="width: 100%;" onclick="openCreateModal()">
+                                            <i class="material-icons left">add</i>
+                                            ایجاد اکانت جدید
+                                        </button>
+                                    </div>
+                                    <div class="col s12 m3">
+                                        <select id="productFilter" class="browser-default">
+                                            <option value="">همه محصولات</option>
+                                        </select>
+                                    </div>
+                                    <div class="col s12 m3">
+                                        <select id="statusFilter" class="browser-default">
+                                            <option value="">همه وضعیت‌ها</option>
+                                            <option value="active">فعال</option>
+                                            <option value="expired">منقضی شده</option>
+                                            <option value="disabled">غیرفعال</option>
+                                        </select>
+                                    </div>
+                                    <div class="col s12 m3">
+                                        <input type="text" id="searchInput" placeholder="جستجو (نام کاربری یا توضیحات)">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accounts Table -->
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card custom-card data-table">
+                            <div class="card-content">
+                                <span class="card-title">
+                                    <i class="material-icons left">list</i>
+                                    لیست اکانت‌ها
+                                </span>
+                                <table class="striped responsive-table">
+                                    <thead>
+                                        <tr>
+                                            <th>نام کاربری</th>
+                                            <th>محصول</th>
+                                            <th>وضعیت</th>
+                                            <th>مصرف / کل حجم</th>
+                                            <th>تاریخ انقضا</th>
+                                            <th>عملیات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="accountsTableBody">
+                                        <tr>
+                                            <td colspan="6" class="center-align">
+                                                <div class="preloader-wrapper small active">
+                                                    <div class="spinner-layer spinner-teal-only">
+                                                        <div class="circle-clipper left">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                        <div class="gap-patch">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                        <div class="circle-clipper right">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Account Modal -->
+    <div id="createAccountModal" class="modal">
+        <div class="modal-content">
+            <h4>ایجاد اکانت جدید</h4>
+            <form id="createAccountForm">
+                <div class="row">
+                    <div class="input-field col s12 m6">
+                        <input id="newUsername" type="text" required>
+                        <label for="newUsername">نام کاربری *</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <select id="newProduct" required>
+                            <option value="" disabled selected>انتخاب محصول</option>
+                        </select>
+                        <label>محصول *</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <select id="newServicePlan" required>
+                            <option value="" disabled selected>انتخاب پلن</option>
+                        </select>
+                        <label>پلن سرویس *</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <input id="newDescription" type="text">
+                        <label for="newDescription">توضیحات (اختیاری)</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <p>
+                            <label>
+                                <input type="checkbox" id="autoRenewCheck" />
+                                <span>تمدید خودکار فعال باشد</span>
+                            </label>
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-flat waves-effect" onclick="closeCreateModal()">لغو</button>
+            <button class="btn waves-effect waves-light teal" onclick="createAccount()">
+                <i class="material-icons left">check</i>
+                ایجاد
+            </button>
+        </div>
+    </div>
+
+    <!-- Renew Account Modal -->
+    <div id="renewModal" class="modal">
+        <div class="modal-content">
+            <h4>تمدید اکانت</h4>
+            <p>اکانت: <strong id="renewAccountUsername"></strong></p>
+            <form id="renewForm">
+                <div class="input-field">
+                    <input id="renewDays" type="number" min="1" required>
+                    <label for="renewDays">تعداد روز *</label>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-flat waves-effect" onclick="closeRenewModal()">لغو</button>
+            <button class="btn waves-effect waves-light teal" onclick="renewAccount()">
+                <i class="material-icons left">check</i>
+                تمدید
+            </button>
+        </div>
+    </div>
+
+    <!-- Add Traffic Modal -->
+    <div id="addTrafficModal" class="modal">
+        <div class="modal-content">
+            <h4>افزودن حجم</h4>
+            <p>اکانت: <strong id="trafficAccountUsername"></strong></p>
+            <form id="addTrafficForm">
+                <div class="input-field">
+                    <input id="trafficGB" type="number" min="1" required>
+                    <label for="trafficGB">حجم (GB) *</label>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-flat waves-effect" onclick="closeAddTrafficModal()">لغو</button>
+            <button class="btn waves-effect waves-light teal" onclick="addTraffic()">
+                <i class="material-icons left">check</i>
+                افزودن
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-white-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- API Client -->
+    <script src="/js/api.js"></script>
+    <!-- Accounts Script -->
+    <script src="/js/accounts.js"></script>
+</body>
+</html>
