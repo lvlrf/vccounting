@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد مدیریت</title>
+
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="logo">
+                <h5>پنل مدیریت</h5>
+            </div>
+
+            <div class="user-info">
+                <p><strong id="userFullName">مدیر سیستم</strong></p>
+                <p id="userUsername">admin</p>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="/pages/admin/dashboard.html" class="nav-item active">
+                    <i class="material-icons">dashboard</i>
+                    داشبورد
+                </a>
+                <a href="/pages/admin/products.html" class="nav-item">
+                    <i class="material-icons">inventory</i>
+                    مدیریت محصولات
+                </a>
+                <a href="/pages/admin/resellers.html" class="nav-item">
+                    <i class="material-icons">people</i>
+                    مدیریت نمایندگان
+                </a>
+                <a href="/pages/admin/credit.html" class="nav-item">
+                    <i class="material-icons">attach_money</i>
+                    مدیریت کریدیت
+                </a>
+                <a href="#" class="nav-item" onclick="logout()">
+                    <i class="material-icons">exit_to_app</i>
+                    خروج
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Topbar -->
+            <div class="topbar">
+                <div>
+                    <span class="menu-toggle" onclick="toggleSidebar()">
+                        <i class="material-icons">menu</i>
+                    </span>
+                    <h5 style="display: inline-block; margin-right: 10px;">داشبورد مدیریت</h5>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Main Stats -->
+                <div class="row">
+                    <div class="col s12 m6 l3">
+                        <div class="stat-card purple">
+                            <div class="stat-label">تعداد نمایندگان</div>
+                            <div class="stat-value" id="totalResellers">0</div>
+                            <i class="material-icons">people</i>
+                        </div>
+                    </div>
+                    <div class="col s12 m6 l3">
+                        <div class="stat-card blue">
+                            <div class="stat-label">تعداد محصولات</div>
+                            <div class="stat-value" id="totalProducts">0</div>
+                            <i class="material-icons">inventory</i>
+                        </div>
+                    </div>
+                    <div class="col s12 m6 l3">
+                        <div class="stat-card teal">
+                            <div class="stat-label">کل اکانت‌های فعال</div>
+                            <div class="stat-value" id="totalActiveAccounts">0</div>
+                            <i class="material-icons">check_circle</i>
+                        </div>
+                    </div>
+                    <div class="col s12 m6 l3">
+                        <div class="stat-card green">
+                            <div class="stat-label">کل کریدیت توزیع شده</div>
+                            <div class="stat-value" id="totalCreditDistributed">0</div>
+                            <i class="material-icons">account_balance_wallet</i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card custom-card">
+                            <div class="card-content">
+                                <span class="card-title">
+                                    <i class="material-icons left">flash_on</i>
+                                    عملیات سریع
+                                </span>
+                                <div class="row" style="margin-top: 20px;">
+                                    <div class="col s12 m4">
+                                        <a href="/pages/admin/resellers.html?action=create" class="btn waves-effect waves-light purple btn-large" style="width: 100%;">
+                                            <i class="material-icons left">person_add</i>
+                                            افزودن نماینده جدید
+                                        </a>
+                                    </div>
+                                    <div class="col s12 m4">
+                                        <a href="/pages/admin/products.html?action=create" class="btn waves-effect waves-light blue btn-large" style="width: 100%;">
+                                            <i class="material-icons left">add_box</i>
+                                            افزودن محصول جدید
+                                        </a>
+                                    </div>
+                                    <div class="col s12 m4">
+                                        <a href="/pages/admin/credit.html" class="btn waves-effect waves-light green btn-large" style="width: 100%;">
+                                            <i class="material-icons left">account_balance_wallet</i>
+                                            مدیریت کریدیت
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Resellers -->
+                <div class="row">
+                    <div class="col s12 m6">
+                        <div class="card custom-card">
+                            <div class="card-content">
+                                <span class="card-title">
+                                    <i class="material-icons left">people</i>
+                                    آخرین نمایندگان
+                                </span>
+                                <table class="striped">
+                                    <thead>
+                                        <tr>
+                                            <th>نام</th>
+                                            <th>نام کاربری</th>
+                                            <th>وضعیت</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentResellersBody">
+                                        <tr>
+                                            <td colspan="3" class="center-align">
+                                                <div class="preloader-wrapper small active">
+                                                    <div class="spinner-layer spinner-purple-only">
+                                                        <div class="circle-clipper left">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                        <div class="gap-patch">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                        <div class="circle-clipper right">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col s12 m6">
+                        <div class="card custom-card">
+                            <div class="card-content">
+                                <span class="card-title">
+                                    <i class="material-icons left">inventory</i>
+                                    محصولات سیستم
+                                </span>
+                                <table class="striped">
+                                    <thead>
+                                        <tr>
+                                            <th>نام محصول</th>
+                                            <th>نوع</th>
+                                            <th>وضعیت</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="productsBody">
+                                        <tr>
+                                            <td colspan="3" class="center-align">
+                                                <div class="preloader-wrapper small active">
+                                                    <div class="spinner-layer spinner-blue-only">
+                                                        <div class="circle-clipper left">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                        <div class="gap-patch">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                        <div class="circle-clipper right">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-white-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- API Client -->
+    <script src="/js/api.js"></script>
+    <!-- Admin Dashboard Script -->
+    <script src="/js/admin-dashboard.js"></script>
+</body>
+</html>
