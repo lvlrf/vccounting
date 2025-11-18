@@ -11,8 +11,9 @@ import logging
 from .config import settings
 from .database import engine, Base
 
-# Import routers (بعداً اضافه می‌شود)
-# from .api import auth, admin, reseller
+# Import routers
+from .api import auth, reseller
+from .api.admin import router as admin_router
 
 # Configure logging
 logging.basicConfig(
@@ -106,10 +107,10 @@ async def internal_error_handler(request, exc):
     )
 
 
-# Include Routers (بعداً uncomment کن)
-# app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
-# app.include_router(admin.router, prefix="/api/admin", tags=["Admin"])
-# app.include_router(reseller.router, prefix="/api/reseller", tags=["Reseller"])
+# Include Routers
+app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
+app.include_router(admin_router, prefix="/api/admin")
+app.include_router(reseller.router, prefix="/api/reseller", tags=["Reseller"])
 
 
 if __name__ == "__main__":
