@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد نماینده</title>
+
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="logo">
+                <h5>پنل نماینده</h5>
+            </div>
+
+            <div class="user-info">
+                <p><strong id="userFullName">نام نماینده</strong></p>
+                <p id="userUsername">username</p>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="/pages/reseller/dashboard.html" class="nav-item active">
+                    <i class="material-icons">dashboard</i>
+                    داشبورد
+                </a>
+                <a href="/pages/reseller/accounts.html" class="nav-item">
+                    <i class="material-icons">account_box</i>
+                    مدیریت اکانت‌ها
+                </a>
+                <a href="/pages/reseller/credit.html" class="nav-item">
+                    <i class="material-icons">account_balance_wallet</i>
+                    کریدیت و تراکنش‌ها
+                </a>
+                <a href="/pages/reseller/profile.html" class="nav-item">
+                    <i class="material-icons">person</i>
+                    پروفایل
+                </a>
+                <a href="#" class="nav-item" onclick="logout()">
+                    <i class="material-icons">exit_to_app</i>
+                    خروج
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Topbar -->
+            <div class="topbar">
+                <div>
+                    <span class="menu-toggle" onclick="toggleSidebar()">
+                        <i class="material-icons">menu</i>
+                    </span>
+                    <h5 style="display: inline-block; margin-right: 10px;">داشبورد</h5>
+                </div>
+                <div>
+                    <span class="credit-badge">
+                        <i class="material-icons tiny">account_balance_wallet</i>
+                        موجودی: <span id="creditBalance">0</span> کریدیت
+                    </span>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Stat Cards -->
+                <div class="row">
+                    <div class="col s12 m6 l3">
+                        <div class="stat-card teal">
+                            <div class="stat-label">تعداد اکانت فعال</div>
+                            <div class="stat-value" id="activeAccounts">0</div>
+                            <i class="material-icons">check_circle</i>
+                        </div>
+                    </div>
+                    <div class="col s12 m6 l3">
+                        <div class="stat-card orange">
+                            <div class="stat-label">اکانت منقضی شده</div>
+                            <div class="stat-value" id="expiredAccounts">0</div>
+                            <i class="material-icons">warning</i>
+                        </div>
+                    </div>
+                    <div class="col s12 m6 l3">
+                        <div class="stat-card purple">
+                            <div class="stat-label">کل اکانت‌ها</div>
+                            <div class="stat-value" id="totalAccounts">0</div>
+                            <i class="material-icons">group</i>
+                        </div>
+                    </div>
+                    <div class="col s12 m6 l3">
+                        <div class="stat-card blue">
+                            <div class="stat-label">کریدیت خرج شده</div>
+                            <div class="stat-value" id="spentCredit">0</div>
+                            <i class="material-icons">payment</i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card custom-card">
+                            <div class="card-content">
+                                <span class="card-title">
+                                    <i class="material-icons left">flash_on</i>
+                                    عملیات سریع
+                                </span>
+                                <div class="row" style="margin-top: 20px;">
+                                    <div class="col s12 m4">
+                                        <a href="/pages/reseller/accounts.html?action=create" class="btn waves-effect waves-light teal btn-large" style="width: 100%;">
+                                            <i class="material-icons left">add</i>
+                                            ایجاد اکانت جدید
+                                        </a>
+                                    </div>
+                                    <div class="col s12 m4">
+                                        <a href="/pages/reseller/accounts.html" class="btn waves-effect waves-light blue btn-large" style="width: 100%;">
+                                            <i class="material-icons left">list</i>
+                                            لیست اکانت‌ها
+                                        </a>
+                                    </div>
+                                    <div class="col s12 m4">
+                                        <a href="/pages/reseller/credit.html" class="btn waves-effect waves-light purple btn-large" style="width: 100%;">
+                                            <i class="material-icons left">history</i>
+                                            تاریخچه کریدیت
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card custom-card">
+                            <div class="card-content">
+                                <span class="card-title">
+                                    <i class="material-icons left">receipt</i>
+                                    آخرین تراکنش‌ها
+                                </span>
+                                <table class="striped" id="recentTransactionsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>تاریخ</th>
+                                            <th>عملیات</th>
+                                            <th>مقدار</th>
+                                            <th>توضیحات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="transactionsBody">
+                                        <tr>
+                                            <td colspan="4" class="center-align">
+                                                <div class="preloader-wrapper small active">
+                                                    <div class="spinner-layer spinner-teal-only">
+                                                        <div class="circle-clipper left">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                        <div class="gap-patch">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                        <div class="circle-clipper right">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-white-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- API Client -->
+    <script src="/js/api.js"></script>
+    <!-- Dashboard Script -->
+    <script src="/js/reseller-dashboard.js"></script>
+</body>
+</html>

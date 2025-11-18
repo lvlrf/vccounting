@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت نمایندگی</title>
+
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <div class="row">
+            <div class="col s12 m6 offset-m3">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="center-align">
+                            <i class="material-icons large teal-text">account_circle</i>
+                            <h4>ورود به سیستم</h4>
+                        </div>
+
+                        <form id="loginForm">
+                            <div class="input-field">
+                                <i class="material-icons prefix">person</i>
+                                <input id="username" name="username" type="text" class="validate" required>
+                                <label for="username">نام کاربری</label>
+                            </div>
+
+                            <div class="input-field">
+                                <i class="material-icons prefix">lock</i>
+                                <input id="password" name="password" type="password" class="validate" required>
+                                <label for="password">رمز عبور</label>
+                            </div>
+
+                            <div class="center-align">
+                                <button class="btn waves-effect waves-light teal" type="submit">
+                                    ورود
+                                    <i class="material-icons left">send</i>
+                                </button>
+                            </div>
+                        </form>
+
+                        <div id="loginError" class="card-panel red lighten-4 red-text text-darken-4" style="display: none; margin-top: 20px;">
+                            <i class="material-icons left">error</i>
+                            <span id="errorMessage"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="center-align white-text">
+                    <p>پنل مدیریت نمایندگی محصولات</p>
+                    <p>نسخه 1.0.0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- API Client -->
+    <script src="/js/api.js"></script>
+    <!-- Login Script -->
+    <script src="/js/login.js"></script>
+</body>
+</html>
