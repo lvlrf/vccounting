@@ -32,14 +32,16 @@ class CustomerAccount(Base):
     product_id = Column(UUID(as_uuid=True), ForeignKey("products.id"), nullable=False)
     service_plan_id = Column(UUID(as_uuid=True), ForeignKey("service_plans.id"), nullable=False)
 
+    # ارتباط با مشتری نهایی (اختیاری)
+    customer_id = Column(UUID(as_uuid=True), ForeignKey("customers.id"), nullable=True, index=True)
+
     # اطلاعات اکانت
     username = Column(String(100), nullable=False, index=True)
     panel_account_id = Column(String(255), nullable=True)  # ID در پنل مقصد
     subscription_url = Column(Text, nullable=True)  # لینک اشتراک
 
-    # اطلاعات مشتری (اختیاری)
-    customer_name = Column(String(100), nullable=True)
-    customer_note = Column(Text, nullable=True)
+    # توضیحات
+    description = Column(Text, nullable=True)
 
     # مشخصات سرویس
     data_limit_gb = Column(Integer, nullable=True)  # null = نامحدود
@@ -63,6 +65,7 @@ class CustomerAccount(Base):
 
     # Relationships
     reseller = relationship("Reseller", back_populates="accounts")
+    customer = relationship("Customer", back_populates="accounts")
     product = relationship("Product")
     service_plan = relationship("ServicePlan", back_populates="accounts")
     sync_logs = relationship("AccountSyncLog", back_populates="account")

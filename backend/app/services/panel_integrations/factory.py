@@ -9,6 +9,7 @@ from .base import BasePanelIntegration, PanelConnectionError
 from .marzban import MarzbanIntegration
 from .remnawave import RemnawaveIntegration
 from .marzneshin import MarzneshinIntegration
+from .ovpanel import OvPanelIntegration
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +17,7 @@ logger = logging.getLogger(__name__)
 class PanelIntegrationFactory:
     """
     Factory برای ایجاد integration مناسب
+    پشتیبانی از: Marzban, Remnawave, Marzneshin, OvPanel (via OpexCore)
     """
 
     # نگاشت نوع پنل به کلاس integration
@@ -23,6 +25,7 @@ class PanelIntegrationFactory:
         "marzban": MarzbanIntegration,
         "remnawave": RemnawaveIntegration,
         "marzneshin": MarzneshinIntegration,
+        "ovpanel": OvPanelIntegration,
     }
 
     @classmethod

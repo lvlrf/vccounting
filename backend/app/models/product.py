@@ -28,10 +28,11 @@ class IntegrationType(str, enum.Enum):
 
 
 class PanelType(str, enum.Enum):
-    """نوع پنل (برای محصولات VPN)"""
+    """نوع پنل (برای محصولات VPN) - پشتیبانی از OpexCore"""
     MARZBAN = "marzban"
     REMNAWAVE = "remnawave"
     MARZNESHIN = "marzneshin"
+    OVPANEL = "ovpanel"
 
 
 class Product(Base):
@@ -72,6 +73,7 @@ class ProductGroup(Base):
     """
     گروه‌بندی محصولات
     مثال: "VPN پریمیوم", "VPN اقتصادی"
+    با قابلیت تخصیص به گروه‌های مشتریان و اعمال تخفیف
     """
     __tablename__ = "product_groups"
 
@@ -79,6 +81,11 @@ class ProductGroup(Base):
     name = Column(String(100), nullable=False, unique=True)
     description = Column(Text, nullable=True)
 
+    # تخفیف‌های گروهی
+    reseller_discount_percentage = Column(Numeric(5, 2), default=0, nullable=False)  # تخفیف برای نماینده
+    customer_discount_percentage = Column(Numeric(5, 2), default=0, nullable=False)  # تخفیف برای مشتری
+
+    is_active = Column(Boolean, default=True, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     # Relationships

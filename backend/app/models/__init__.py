@@ -14,6 +14,7 @@ from .credit import (
 )
 from .panel_connection import PanelConnection, ResellerProductAccess
 from .account import CustomerAccount, AccountStatus, AccountSyncLog
+from .customer import Customer, Subscription, SubscriptionPlan
 
 __all__ = [
     # User models
@@ -47,4 +48,9 @@ __all__ = [
     "CustomerAccount",
     "AccountStatus",
     "AccountSyncLog",
+
+    # Customer models
+    "Customer",
+    "Subscription",
+    "SubscriptionPlan",
 ]
