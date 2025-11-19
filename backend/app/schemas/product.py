@@ -46,19 +46,25 @@ class ProductResponse(ProductBase):
 class ProductGroupBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=100)
     description: Optional[str] = None
+    reseller_discount_percentage: Decimal = Field(default=0, ge=0, le=100, description="تخفیف نماینده")
+    customer_discount_percentage: Decimal = Field(default=0, ge=0, le=100, description="تخفیف مشتری")
 
 
 class ProductGroupCreate(ProductGroupBase):
-    product_ids: Optional[List[UUID4]] = []
+    product_ids: Optional[List[UUID4]] = Field(default_factory=list, description="لیست محصولات")
 
 
 class ProductGroupUpdate(BaseModel):
     name: Optional[str] = Field(None, min_length=1, max_length=100)
     description: Optional[str] = None
+    reseller_discount_percentage: Optional[Decimal] = Field(None, ge=0, le=100)
+    customer_discount_percentage: Optional[Decimal] = Field(None, ge=0, le=100)
+    is_active: Optional[bool] = None
 
 
 class ProductGroupResponse(ProductGroupBase):
     id: UUID4
+    is_active: bool
     created_at: datetime
 
     class Config:

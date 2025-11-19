@@ -71,20 +71,23 @@ class ResellerBase(BaseModel):
     full_name: Optional[str] = Field(None, max_length=100)
     phone: Optional[str] = Field(None, max_length=20)
     telegram: Optional[str] = Field(None, max_length=50)
+    referral_code: Optional[str] = Field(None, max_length=20, description="کد معرف اختصاصی")
 
 
 class ResellerCreate(UserCreate, ResellerBase):
-    group_id: Optional[UUID4] = None
+    """ایجاد نماینده جدید"""
+    initial_credit: Optional[Decimal] = Field(default=0, ge=0, description="کریدیت اولیه")
+    group_ids: Optional[list[UUID4]] = Field(default_factory=list, description="لیست شناسه گروه‌ها")
 
 
 class ResellerUpdate(ResellerBase):
-    group_id: Optional[UUID4] = None
+    """بروزرسانی نماینده"""
+    pass
 
 
 class ResellerResponse(ResellerBase):
     id: UUID4
     user_id: UUID4
-    group_id: Optional[UUID4]
     total_accounts_created: Decimal
     total_credit_spent: Decimal
     total_credit_purchased: Decimal
@@ -94,8 +97,18 @@ class ResellerResponse(ResellerBase):
     # Include user info
     user: UserResponse
 
+    # Many-to-Many groups
+    groups: list[ResellerGroupResponse] = Field(default_factory=list, description="گروه‌های نماینده")
+
     class Config:
         from_attributes = True
+
+
+# Reseller-Group Management
+class ResellerGroupAssignment(BaseModel):
+    """افزودن/حذف نماینده به/از گروه"""
+    reseller_id: UUID4
+    group_id: UUID4
 
 
 # Auth Schemas
